@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>HYPECUT — Register</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rajdhani:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+
+    :root {
+      --pink:   #FF2DB8;
+      --purple: #9B2EFF;
+      --blue:   #3B2FFF;
+      --grad:   linear-gradient(135deg, #FF2DB8, #9B2EFF, #3B2FFF);
+      --grad-h: linear-gradient(135deg, #FF5ED0, #B55FFF, #6057FF);
+      --bg:     #080808;
+      --card:   #111111;
+      --input:  #1a1a1a;
+      --border: rgba(255,255,255,0.08);
+      --text:   #ffffff;
+      --muted:  rgba(255,255,255,0.45);
+    }
+
+    body {
+      min-height: 100vh;
+      background: var(--bg);
+      background-image:
+        radial-gradient(ellipse 80% 60% at 20% 0%, rgba(255,45,184,0.12) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 50% at 80% 100%, rgba(59,47,255,0.14) 0%, transparent 60%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Inter', sans-serif;
+      padding: 28px 16px;
+    }
+
+    .wrapper { width: 100%; max-width: 540px; }
+
+    /* ── Brand Header ── */
+    .brand {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    .brand-logo {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 3.4rem;
+      letter-spacing: 6px;
+      background: var(--grad);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      line-height: 1;
+    }
+    .brand-tag {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 4px;
+      color: var(--muted);
+      margin-top: 6px;
+      text-transform: uppercase;
+    }
+    .brand-tag span { color: var(--pink); margin: 0 6px; opacity: 0.7; }
+
+    /* ── Card ── */
+    .card {
+      background: var(--card);
+      border-radius: 20px;
+      border: 1px solid rgba(255,45,184,0.18);
+      overflow: hidden;
+      box-shadow:
+        0 0 0 1px rgba(59,47,255,0.1),
+        0 30px 80px rgba(0,0,0,0.8),
+        0 0 60px rgba(155,46,255,0.08);
+    }
+
+    /* animated gradient top bar */
+    .card-bar {
+      height: 3px;
+      background: linear-gradient(90deg, #FF2DB8, #9B2EFF, #3B2FFF, #9B2EFF, #FF2DB8);
+      background-size: 300% 100%;
+      animation: barMove 4s linear infinite;
+    }
+    @keyframes barMove {
+      0%   { background-position: 0% 0%; }
+      100% { background-position: 300% 0%; }
+    }
+
+    .card-body { padding: 36px 40px 44px; }
+
+    .card-title {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--text);
+      letter-spacing: 1px;
+    }
+    .card-sub {
+      font-size: 0.85rem;
+      color: var(--muted);
+      margin-top: 4px;
+      margin-bottom: 30px;
+    }
+
+    /* ── Form ── */
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    .form-group { margin-bottom: 18px; }
+
+    label {
+      display: block;
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: var(--muted);
+      margin-bottom: 7px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    label .req { color: var(--pink); margin-left: 2px; }
+
+    input, textarea {
+      width: 100%;
+      padding: 12px 15px;
+      background: var(--input);
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      font-size: 0.93rem;
+      font-family: 'Inter', sans-serif;
+      color: var(--text);
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    input::placeholder, textarea::placeholder { color: rgba(255,255,255,0.2); }
+
+    input:focus, textarea:focus {
+      border-color: var(--purple);
+      box-shadow: 0 0 0 3px rgba(155,46,255,0.18), 0 0 20px rgba(255,45,184,0.08);
+    }
+    input.err { border-color: #ff4d6a; box-shadow: 0 0 0 3px rgba(255,77,106,0.15); }
+
+    .err-msg {
+      font-size: 0.75rem;
+      color: #ff4d6a;
+      margin-top: 5px;
+      display: none;
+    }
+    .err-msg.show { display: block; }
+
+    textarea { resize: vertical; min-height: 88px; }
+
+    /* ── Gradient Button ── */
+    .btn-wrap {
+      margin-top: 10px;
+      position: relative;
+      border-radius: 11px;
+      padding: 1.5px;
+      background: var(--grad);
+    }
+    .btn {
+      width: 100%;
+      padding: 14px;
+      background: var(--grad);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-size: 0.95rem;
+      font-family: 'Rajdhani', sans-serif;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      transition: opacity 0.2s, transform 0.2s;
+      position: relative;
+      overflow: hidden;
+    }
+    .btn::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(255,255,255,0.12), transparent);
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+    .btn:hover::after { opacity: 1; }
+    .btn:hover:not(:disabled) { transform: translateY(-2px); }
+    .btn:active:not(:disabled) { transform: translateY(0); }
+    .btn:disabled { opacity: 0.55; cursor: not-allowed; }
+
+    .spinner {
+      width: 17px; height: 17px;
+      border: 2px solid rgba(255,255,255,0.25);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin 0.6s linear infinite;
+      display: none;
+    }
+    .spinner.show { display: block; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── Divider ── */
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 28px 0 0;
+    }
+    .divider-line {
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+    .divider-text {
+      font-size: 0.7rem;
+      color: var(--muted);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    /* ── Success ── */
+    .success { display: none; text-align: center; padding: 20px 0 12px; }
+    .success.show { display: block; }
+    .form-content.hide { display: none; }
+
+    .check-glow {
+      width: 80px; height: 80px;
+      background: var(--grad);
+      border-radius: 50%;
+      margin: 0 auto 20px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 2.2rem;
+      box-shadow: 0 0 40px rgba(155,46,255,0.5);
+      animation: popIn 0.45s cubic-bezier(.25,1.4,.5,1);
+    }
+    @keyframes popIn {
+      0%   { transform: scale(0) rotate(-20deg); }
+      70%  { transform: scale(1.12) rotate(3deg); }
+      100% { transform: scale(1) rotate(0deg); }
+    }
+    .success h2 {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 1.6rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      color: var(--text);
+      margin-bottom: 10px;
+    }
+    .success p { color: var(--muted); font-size: 0.9rem; line-height: 1.65; }
+
+    .btn-ghost {
+      margin-top: 24px;
+      padding: 10px 28px;
+      background: transparent;
+      border: 1.5px solid rgba(155,46,255,0.5);
+      color: var(--purple);
+      border-radius: 8px;
+      font-family: 'Rajdhani', sans-serif;
+      font-weight: 700;
+      font-size: 0.875rem;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-ghost:hover {
+      background: var(--grad);
+      color: #fff;
+      border-color: transparent;
+    }
+
+    @media (max-width: 520px) {
+      .form-row { grid-template-columns: 1fr; }
+      .card-body { padding: 28px 20px 32px; }
+      .brand-logo { font-size: 2.6rem; }
+    }
+  </style>
+</head>
+<script>
+const SHEET_API_URL = 'https://script.google.com/macros/s/AKfycbyE-rFXzyQjKhqaoIXgx8AM9M8Cb5jBedqiUU6MnNZj5_2_jvdSnaqdfVP1g-VD4W26/exec';
+
+async function loadContentLibrary() {
+  const res = await fetch(SHEET_API_URL);
+  const items = await res.json();
+
+  const videos = items.filter(i => i.Type === 'video');
+
+  const videosContainer = document.getElementById('videos-grid'); // ← change to your real container id
+  videosContainer.innerHTML = videos.map(v => `
+    <div class="content-card">
+      <div class="thumb" data-video-id="${v.MediaID}">
+        <img src="https://img.youtube.com/vi/${v.MediaID}/hqdefault.jpg" alt="">
+        <button class="play-btn">▶</button>
+      </div>
+      <h3>${v.Title}</h3>
+      <p>${v.Description}</p>
+    </div>
+  `).join('');
+
+  document.querySelectorAll('.thumb').forEach(thumb => {
+    thumb.addEventListener('click', () => {
+      const id = thumb.dataset.videoId;
+      thumb.innerHTML = `<iframe width="100%" height="100%"
+        src="https://www.youtube.com/embed/${id}?autoplay=1"
+        frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
+    });
+  });
+}
+
+loadContentLibrary();
+</script>
+
+<body>
+
+<div class="wrapper">
+
+  <!-- Brand -->
+  <div class="brand">
+    <div class="brand-logo">HYPECUT</div>
+    <div class="brand-tag">Edit <span>•</span> Create <span>•</span> Elevate</div>
+  </div>
+
+  <div class="card">
+    <div class="card-bar"></div>
+    <div class="card-body">
+
+      <!-- FORM STATE -->
+      <div class="form-content" id="formContent">
+        <p class="card-title">Register Your Details</p>
+        <p class="card-sub">Fill in below — we'll get back to you soon ✦</p>
+
+        <form id="myForm" novalidate>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label>Full Name <span class="req">*</span></label>
+              <input type="text" id="name" placeholder="Your name"/>
+              <div class="err-msg" id="nameErr">Please enter your name</div>
+            </div>
+            <div class="form-group">
+              <label>Phone <span class="req">*</span></label>
+              <input type="tel" id="phone" placeholder="+91 98765 43210"/>
+              <div class="err-msg" id="phoneErr">Enter a valid number</div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Email Address <span class="req">*</span></label>
+            <input type="email" id="email" placeholder="you@example.com"/>
+            <div class="err-msg" id="emailErr">Enter a valid email</div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label>City <span class="req">*</span></label>
+              <input type="text" id="city" placeholder="Nashik"/>
+              <div class="err-msg" id="cityErr">Please enter your city</div>
+            </div>
+            <div class="form-group">
+              <label>State</label>
+              <input type="text" id="state" placeholder="Maharashtra"/>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Message <span style="font-weight:400;letter-spacing:0;text-transform:none;opacity:0.5">(optional)</span></label>
+            <textarea id="message" placeholder="Tell us what you're looking for..."></textarea>
+          </div>
+
+          <div class="btn-wrap">
+            <button type="submit" class="btn" id="submitBtn">
+              <span id="btnText">Submit Details</span>
+              <span class="spinner" id="spinner"></span>
+            </button>
+          </div>
+
+        </form>
+      </div><!-- /form-content -->
+
+      <!-- SUCCESS STATE -->
+      <div class="success" id="successBox">
+        <div class="check-glow">✓</div>
+        <h2>You're In! 🎉</h2>
+        <p>Thanks for registering with HYPECUT.<br/>We've saved your details and will reach out soon.</p>
+        <button class="btn-ghost" onclick="resetForm()">Submit Another Response</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+  // ✅ Google Apps Script Web App URL (connected)
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw53QQcIz2mGsmBthMD9omAC3tOa9-RFnCsq1JPT4pMUgSZwv6KEuzpuS2IUKdGsPdT-g/exec";
+
+  const form    = document.getElementById('myForm');
+  const btn     = document.getElementById('submitBtn');
+  const btnText = document.getElementById('btnText');
+  const spinner = document.getElementById('spinner');
+
+  function validate() {
+    let ok = true;
+    const checks = [
+      { id:'name',  err:'nameErr',  fn: v => v.trim().length >= 2 },
+      { id:'phone', err:'phoneErr', fn: v => /^\+?[\d\s\-()]{10,15}$/.test(v.trim()) },
+      { id:'email', err:'emailErr', fn: v => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v) },
+      { id:'city',  err:'cityErr',  fn: v => v.trim().length >= 2 },
+    ];
+    checks.forEach(({ id, err, fn }) => {
+      const el = document.getElementById(id);
+      const em = document.getElementById(err);
+      if (fn(el.value)) {
+        el.classList.remove('err');
+        em.classList.remove('show');
+      } else {
+        el.classList.add('err');
+        em.classList.add('show');
+        ok = false;
+      }
+    });
+    return ok;
+  }
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    if (!validate()) return;
+
+    btn.disabled = true;
+    btnText.textContent = 'Submitting…';
+    spinner.classList.add('show');
+
+    const payload = {
+      name:      document.getElementById('name').value.trim(),
+      phone:     document.getElementById('phone').value.trim(),
+      email:     document.getElementById('email').value.trim(),
+      city:      document.getElementById('city').value.trim(),
+      state:     document.getElementById('state').value.trim(),
+      message:   document.getElementById('message').value.trim(),
+      timestamp: new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' })
+    };
+
+    try {
+      await fetch(SCRIPT_URL, {
+        method: 'POST',
+        mode:   'no-cors',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      document.getElementById('formContent').classList.add('hide');
+      document.getElementById('successBox').classList.add('show');
+    } catch (err) {
+      alert('❌ Network error. Please check your connection and try again.');
+      btn.disabled = false;
+      btnText.textContent = 'Submit Details';
+      spinner.classList.remove('show');
+    }
+  });
+
+  function resetForm() {
+    form.reset();
+    document.querySelectorAll('input,textarea').forEach(el => el.classList.remove('err'));
+    document.querySelectorAll('.err-msg').forEach(el => el.classList.remove('show'));
+    btn.disabled = false;
+    btnText.textContent = 'Submit Details';
+    spinner.classList.remove('show');
+    document.getElementById('formContent').classList.remove('hide');
+    document.getElementById('successBox').classList.remove('show');
+  }
+</script>
+
+</body>
+</html>
