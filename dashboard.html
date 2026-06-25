@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>HYPECUT — Members Area</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rajdhani:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+
+    :root {
+      --pink:   #FF2DB8;
+      --purple: #9B2EFF;
+      --blue:   #3B2FFF;
+      --grad:   linear-gradient(135deg, #FF2DB8, #9B2EFF, #3B2FFF);
+      --bg:     #080808;
+      --card:   #111111;
+      --card2:  #161616;
+      --input:  #1a1a1a;
+      --border: rgba(255,255,255,0.08);
+      --text:   #ffffff;
+      --muted:  rgba(255,255,255,0.45);
+    }
+
+    body {
+      min-height: 100vh;
+      background: var(--bg);
+      background-image:
+        radial-gradient(ellipse 70% 50% at 10% 0%,   rgba(255,45,184,0.10) 0%, transparent 55%),
+        radial-gradient(ellipse 50% 40% at 90% 100%,  rgba(59,47,255,0.12)  0%, transparent 55%);
+      font-family: 'Inter', sans-serif;
+      color: var(--text);
+    }
+
+    /* ═══════════════ TOPBAR ═══════════════ */
+    .topbar {
+      background: rgba(17,17,17,0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(255,45,184,0.15);
+      padding: 0 32px;
+      height: 62px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky; top: 0; z-index: 200;
+    }
+
+    /* Animated bar under topbar */
+    .topbar::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, #FF2DB8, #9B2EFF, #3B2FFF, #9B2EFF, #FF2DB8);
+      background-size: 300% 100%;
+      animation: barMove 4s linear infinite;
+    }
+    @keyframes barMove { 100% { background-position: 300% 0%; } }
+
+    .logo {
+      display: flex; align-items: center; gap: 12px;
+    }
+    .logo-text {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.8rem;
+      letter-spacing: 4px;
+      background: var(--grad);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      line-height: 1;
+    }
+    .logo-badge {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--pink);
+      border: 1px solid rgba(255,45,184,0.4);
+      padding: 2px 7px;
+      border-radius: 4px;
+      margin-top: 4px;
+    }
+
+    .user-bar { display: flex; align-items: center; gap: 14px; }
+    .user-email {
+      font-size: 0.78rem;
+      color: var(--muted);
+      max-width: 200px;
+      overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    }
+    .btn-logout {
+      background: transparent;
+      border: 1px solid rgba(255,255,255,0.12);
+      color: var(--muted);
+      padding: 6px 16px;
+      border-radius: 7px;
+      font-size: 0.75rem;
+      font-family: 'Rajdhani', sans-serif;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-logout:hover {
+      border-color: var(--pink);
+      color: var(--pink);
+    }
+
+    /* ═══════════════ HERO ═══════════════ */
+    .hero {
+      padding: 48px 32px 36px;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    .hero-eyebrow {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--pink);
+      margin-bottom: 10px;
+    }
+    .hero-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 3rem;
+      letter-spacing: 3px;
+      background: var(--grad);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      line-height: 1;
+      margin-bottom: 10px;
+    }
+    .hero-sub {
+      font-size: 0.88rem;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    /* ═══════════════ CONTAINER ═══════════════ */
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 32px 60px;
+    }
+
+    /* ═══════════════ SECTION LABEL ═══════════════ */
+    .section-label {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 20px;
+    }
+    .section-label h2 {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--text);
+    }
+    .section-label .pill {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      padding: 3px 10px;
+      border-radius: 100px;
+    }
+    .pill.video { background: rgba(155,46,255,0.18); color: var(--purple); border: 1px solid rgba(155,46,255,0.35); }
+    .pill.pdf   { background: rgba(255,45,184,0.12); color: var(--pink);   border: 1px solid rgba(255,45,184,0.3); }
+    .pill.lock  { background: rgba(255,255,255,0.05); color: var(--muted); border: 1px solid var(--border); }
+
+    .divider-line {
+      flex: 1; height: 1px;
+      background: linear-gradient(90deg, rgba(255,45,184,0.3), transparent);
+    }
+
+    /* ═══════════════ GRID ═══════════════ */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 18px;
+      margin-bottom: 48px;
+    }
+
+    /* ═══════════════ CONTENT CARD ═══════════════ */
+    .c-card {
+      background: var(--card);
+      border: 1px solid rgba(255,45,184,0.12);
+      border-radius: 16px;
+      overflow: hidden;
+      cursor: pointer;
+      transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
+      position: relative;
+    }
+    .c-card:hover {
+      border-color: rgba(155,46,255,0.5);
+      transform: translateY(-3px);
+      box-shadow: 0 16px 48px rgba(0,0,0,0.6), 0 0 30px rgba(155,46,255,0.12);
+    }
+
+    /* thin top bar per card */
+    .c-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; height: 2px;
+      background: var(--grad);
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+    .c-card:hover::before { opacity: 1; }
+
+    .c-thumb {
+      background: var(--card2);
+      height: 154px;
+      display: flex; align-items: center; justify-content: center;
+      position: relative;
+      font-size: 3rem;
+    }
+
+    /* gradient shimmer on thumb */
+    .c-thumb::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: var(--grad);
+      opacity: 0.06;
+    }
+
+    .type-badge {
+      position: absolute;
+      top: 10px; left: 10px;
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      padding: 3px 9px;
+      border-radius: 5px;
+    }
+    .type-badge.v { background: rgba(155,46,255,0.25); color: #c47fff; border: 1px solid rgba(155,46,255,0.4); }
+    .type-badge.p { background: rgba(255,45,184,0.2);  color: #ff80d9; border: 1px solid rgba(255,45,184,0.35); }
+
+    .play-ring {
+      position: absolute;
+      width: 44px; height: 44px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.06);
+      border: 1.5px solid rgba(255,255,255,0.15);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.1rem;
+      transition: background 0.2s;
+      z-index: 2;
+    }
+    .c-card:hover .play-ring {
+      background: rgba(155,46,255,0.3);
+      border-color: var(--purple);
+    }
+
+    .c-body { padding: 16px 18px 18px; }
+    .c-title {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 0.98rem;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+    .c-desc {
+      font-size: 0.78rem;
+      color: var(--muted);
+      line-height: 1.55;
+    }
+
+    /* ═══════════════ MODAL ═══════════════ */
+    .overlay {
+      display: none;
+      position: fixed; inset: 0; z-index: 500;
+      background: rgba(0,0,0,0.92);
+      align-items: center; justify-content: center;
+      padding: 20px;
+    }
+    .overlay.open { display: flex; }
+
+    .modal {
+      background: var(--card);
+      border: 1px solid rgba(255,45,184,0.25);
+      border-radius: 20px;
+      width: 100%; max-width: 900px;
+      max-height: 92vh;
+      display: flex; flex-direction: column;
+      overflow: hidden;
+      box-shadow: 0 40px 100px rgba(0,0,0,0.9), 0 0 60px rgba(155,46,255,0.12);
+    }
+
+    .modal-bar {
+      height: 3px;
+      background: linear-gradient(90deg, #FF2DB8, #9B2EFF, #3B2FFF, #9B2EFF, #FF2DB8);
+      background-size: 300% 100%;
+      animation: barMove 4s linear infinite;
+      flex-shrink: 0;
+    }
+
+    .modal-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 14px 20px;
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+    .modal-title {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      color: var(--text);
+    }
+    .modal-close {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid var(--border);
+      color: var(--muted);
+      width: 30px; height: 30px;
+      border-radius: 6px;
+      font-size: 16px;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: all 0.2s;
+      line-height: 1;
+    }
+    .modal-close:hover { background: rgba(255,45,184,0.15); border-color: var(--pink); color: var(--pink); }
+
+    .viewer-wrap {
+      position: relative;
+      width: 100%;
+      flex: 1;
+      min-height: 480px;
+      background: #000;
+    }
+
+    /* Invisible shield blocks right-click / download UI on iframe */
+    .no-dl-shield {
+      position: absolute;
+      inset: 0;
+      z-index: 10;
+      /* pointer-events toggled by JS per content type */
+    }
+
+    iframe {
+      width: 100%; height: 100%;
+      border: none;
+      display: block;
+    }
+
+    .modal-footer {
+      padding: 10px 20px;
+      border-top: 1px solid var(--border);
+      display: flex; align-items: center; gap: 8px;
+      flex-shrink: 0;
+    }
+    .lock-icon { font-size: 0.75rem; }
+    .lock-text {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    /* ═══════════════ RESPONSIVE ═══════════════ */
+    @media (max-width: 600px) {
+      .topbar, .container, .hero { padding-left: 16px; padding-right: 16px; }
+      .hero-title { font-size: 2rem; }
+      .viewer-wrap { min-height: 280px; }
+      .user-email { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── TOPBAR ── -->
+<nav class="topbar">
+  <div class="logo">
+    <span class="logo-text">HYPECUT</span>
+    <span class="logo-badge">Members</span>
+  </div>
+  <div class="user-bar">
+    <span class="user-email" id="userEmail">Loading…</span>
+    <button class="btn-logout" onclick="handleLogout()">Sign Out</button>
+  </div>
+</nav>
+
+<!-- ── HERO ── -->
+<div class="hero">
+  <p class="hero-eyebrow">✦ Exclusive Access</p>
+  <h1 class="hero-title">Your Content Library</h1>
+  <p class="hero-sub">Stream videos and read documents — view only, no downloading.</p>
+</div>
+
+<!-- ── MAIN ── -->
+<main class="container">
+
+  <!-- VIDEOS -->
+  <div class="section-label">
+    <h2>Videos</h2>
+    <span class="pill video">View Only</span>
+    <span class="pill lock">🔒 Protected</span>
+    <div class="divider-line"></div>
+  </div>
+
+  <div class="grid">
+    <!--
+      HOW TO ADD YOUR VIDEO:
+      1. Upload to Google Drive
+      2. Right-click → Share → "Anyone with the link" → Viewer
+      3. Copy file ID from URL: drive.google.com/file/d/FILE_ID/view
+      4. Replace VIDEO_FILE_ID_1 below with your file ID
+    -->
+    <div class="c-card" onclick="openViewer('video','Introduction — HYPECUT Basics','https://drive.google.com/file/d/VIDEO_FILE_ID_1/preview')">
+      <div class="c-thumb">
+        <span class="type-badge v">Video</span>
+        <div class="play-ring">▶</div>
+      </div>
+      <div class="c-body">
+        <div class="c-title">Introduction — HYPECUT Basics</div>
+        <div class="c-desc">Start here. Overview of tools, workflow and what to expect.</div>
+      </div>
+    </div>
+
+    <div class="c-card" onclick="openViewer('video','Module 1 — Cutting Techniques','https://drive.google.com/file/d/VIDEO_FILE_ID_2/preview')">
+      <div class="c-thumb">
+        <span class="type-badge v">Video</span>
+        <div class="play-ring">▶</div>
+      </div>
+      <div class="c-body">
+        <div class="c-title">Module 1 — Cutting Techniques</div>
+        <div class="c-desc">Core editing moves and rhythm-based cuts explained.</div>
+      </div>
+    </div>
+
+    <div class="c-card" onclick="openViewer('video','Module 2 — Color Grading','https://drive.google.com/file/d/VIDEO_FILE_ID_3/preview')">
+      <div class="c-thumb">
+        <span class="type-badge v">Video</span>
+        <div class="play-ring">▶</div>
+      </div>
+      <div class="c-body">
+        <div class="c-title">Module 2 — Color Grading</div>
+        <div class="c-desc">Creating the HYPECUT look with professional color work.</div>
+      </div>
+    </div>
+
+    <div class="c-card" onclick="openViewer('video','Module 3 — Motion & VFX','https://drive.google.com/file/d/VIDEO_FILE_ID_4/preview')">
+      <div class="c-thumb">
+        <span class="type-badge v">Video</span>
+        <div class="play-ring">▶</div>
+      </div>
+      <div class="c-body">
+        <div class="c-title">Module 3 — Motion & VFX</div>
+        <div class="c-desc">Transitions, effects and motion graphics that pop.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PDFs -->
+  <div class="section-label">
+    <h2>Documents</h2>
+    <span class="pill pdf">View Only</span>
+    <span class="pill lock">🔒 Protected</span>
+    <div class="divider-line"></div>
+  </div>
+
+  <div class="grid">
+    <!--
+      HOW TO ADD YOUR PDF:
+      Same steps as video above — upload to Drive, share as Viewer,
+      paste the file ID into PDF_FILE_ID_1 etc.
+    -->
+    <div class="c-card" onclick="openViewer('pdf','Course Handbook','https://drive.google.com/file/d/PDF_FILE_ID_1/preview')">
+      <div class="c-thumb">
+        <span class="type-badge p">PDF</span>
+        <div class="play-ring">📄</div>
+      </div>
+      <div class="c-body">
+        <div class="c-title">Course Handbook</div>
+        <div class="c-desc">Complete guide covering all modules, tips and references.</div>
+      </div>
+    </div>
+
+    <div class="c-card" onclick="openViewer('pdf','Shortcut Cheat Sheet','https://drive.google.com/file/d/PDF_FILE_ID_2/preview')">
+      <div class="c-thumb">
+        <span class="type-badge p">PDF</span>
+        <div class="play-ring">📄</div>
+      </div>
+      <div class="c-body">
+        <div class="c-title">Shortcut Cheat Sheet</div>
+        <div class="c-desc">Every keyboard shortcut you'll need while editing.</div>
+      </div>
+    </div>
+
+    <div class="c-card" onclick="openViewer('pdf','Assignment Brief','https://drive.google.com/file/d/PDF_FILE_ID_3/preview')">
+      <div class="c-thumb">
+        <span class="type-badge p">PDF</span>
+        <div class="play-ring">📄</div>
+      </div>
+      <div class="c-body">
+        <div class="c-title">Assignment Brief</div>
+        <div class="c-desc">Project instructions and submission requirements.</div>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<!-- ── VIEWER MODAL ── -->
+<div class="overlay" id="overlay" onclick="closeOnOverlay(event)">
+  <div class="modal">
+    <div class="modal-bar"></div>
+    <div class="modal-header">
+      <span class="modal-title" id="modalTitle">Viewing…</span>
+      <button class="modal-close" onclick="closeViewer()">✕</button>
+    </div>
+    <div class="viewer-wrap">
+      <div class="no-dl-shield" id="shield"></div>
+      <iframe id="viewerFrame" src=""
+        allowfullscreen
+        sandbox="allow-same-origin allow-scripts allow-popups allow-forms"
+        referrerpolicy="no-referrer">
+      </iframe>
+    </div>
+    <div class="modal-footer">
+      <span class="lock-icon">🔒</span>
+      <span class="lock-text">View only — Downloading & saving disabled</span>
+    </div>
+  </div>
+</div>
+
+<!-- 🔧 PASTE YOUR FIREBASE CONFIG (same as login.html) -->
+<script type="module">
+  import { initializeApp }
+    from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+  import { getAuth, onAuthStateChanged, signOut }
+    from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+  const firebaseConfig = {
+    apiKey:            "YOUR_API_KEY",
+    authDomain:        "YOUR_PROJECT.firebaseapp.com",
+    projectId:         "YOUR_PROJECT_ID",
+    storageBucket:     "YOUR_PROJECT.appspot.com",
+    messagingSenderId: "YOUR_SENDER_ID",
+    appId:             "YOUR_APP_ID"
+  };
+
+  const app  = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+
+  // 🔒 Guard: redirect to login if not authenticated
+  onAuthStateChanged(auth, user => {
+    if (!user) {
+      window.location.href = "login.html";
+    } else {
+      document.getElementById("userEmail").textContent = user.email;
+    }
+  });
+
+  window.handleLogout = async function () {
+    await signOut(auth);
+    window.location.href = "login.html";
+  };
+</script>
+
+<script>
+  function openViewer(type, title, url) {
+    document.getElementById("modalTitle").textContent = title;
+    document.getElementById("viewerFrame").src = url;
+    document.getElementById("overlay").classList.add("open");
+
+    // For PDFs activate the shield to block toolbar interactions
+    const shield = document.getElementById("shield");
+    shield.style.pointerEvents = type === "pdf" ? "all" : "none";
+  }
+
+  function closeViewer() {
+    document.getElementById("overlay").classList.remove("open");
+    document.getElementById("viewerFrame").src = "";
+  }
+
+  function closeOnOverlay(e) {
+    if (e.target.id === "overlay") closeViewer();
+  }
+
+  // Disable right-click everywhere
+  document.addEventListener("contextmenu", e => e.preventDefault());
+
+  // Block Ctrl+S, Ctrl+P, Ctrl+U
+  document.addEventListener("keydown", e => {
+    if ((e.ctrlKey || e.metaKey) && ["s","p","u"].includes(e.key.toLowerCase())) {
+      e.preventDefault();
+    }
+  });
+</script>
+
+</body>
+</html>
