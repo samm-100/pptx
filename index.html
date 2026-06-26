@@ -1,0 +1,474 @@
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --navy:#060e1f;--navy2:#0a1628;--navy3:#0f2040;--navy4:#162b55;
+  --gold:#c9a227;--gold2:#e8bc2d;--gold3:#f5d060;--gold4:#fce89a;
+  --white:#ffffff;--offwhite:#f8f5ec;
+  --text-muted:rgba(255,255,255,0.65);--text-dim:rgba(255,255,255,0.4);
+}
+body{font-family:'Inter',sans-serif;background:var(--navy);color:var(--white);padding:40px 20px 60px;min-height:100vh}
+h2.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)}
+.title-block{text-align:center;margin-bottom:48px}
+.badge{display:inline-flex;align-items:center;gap:8px;background:rgba(201,162,39,0.12);border:1px solid rgba(201,162,39,0.4);color:var(--gold3);font-size:12px;font-weight:600;letter-spacing:2px;padding:8px 22px;border-radius:20px;text-transform:uppercase;margin-bottom:18px}
+.title-block h1{font-family:'Playfair Display',serif;font-size:clamp(2rem,5vw,3.2rem);font-weight:900;line-height:1.15;background:linear-gradient(135deg,var(--gold) 0%,var(--gold3) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.title-block p{font-size:15px;color:var(--text-muted);margin-top:10px;letter-spacing:.5px}
+.funnel-wrap{display:flex;flex-direction:column;align-items:center;gap:0;position:relative}
+.funnel-step{position:relative;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:filter .15s,transform .12s,box-shadow .15s}
+.funnel-step:hover{filter:brightness(1.13);transform:scaleX(1.02);box-shadow:0 6px 32px rgba(201,162,39,0.3)}
+.funnel-step.active{filter:brightness(1.2);transform:scaleX(1.03)}
+.funnel-inner{display:flex;align-items:center;gap:14px;padding:0 28px;height:100%;width:100%}
+.step-num{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;flex-shrink:0;border:2px solid rgba(201,162,39,0.45)}
+.step-title{font-size:17px;font-weight:700;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;letter-spacing:.3px}
+.step-icon{font-size:26px;flex-shrink:0;margin-left:auto}
+.connector{width:2px;height:10px;background:linear-gradient(to bottom,rgba(201,162,39,0.5),rgba(201,162,39,0.1));margin:0 auto}
+.hint{text-align:center;font-size:13px;color:var(--text-dim);margin-top:28px;letter-spacing:.5px}
+.hint-dot{display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--gold);margin-right:8px;animation:pulse-gold 1.8s infinite}
+@keyframes pulse-gold{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(1.4)}}
+
+/* OVERLAY & POPUP — FULL-WIDTH HORIZONTAL LAYOUT */
+.overlay{position:fixed;inset:0;background:rgba(3,7,18,0.88);z-index:200;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .25s;backdrop-filter:blur(8px);padding:20px}
+.overlay.show{opacity:1;pointer-events:auto}
+
+/* Popup fills ~95vw × ~88vh, horizontal split */
+.popup{
+  background:var(--navy2);
+  border:1px solid rgba(201,162,39,0.3);
+  border-radius:20px;
+  width:min(1200px,95vw);
+  height:min(620px,88vh);
+  display:flex;
+  flex-direction:row;
+  overflow:hidden;
+  box-shadow:0 32px 100px rgba(0,0,0,0.8),0 0 0 1px rgba(201,162,39,0.08);
+  transform:scale(.94) translateY(20px);
+  transition:transform .3s cubic-bezier(.34,1.56,.64,1),opacity .25s;
+  opacity:0;
+  position:relative;
+}
+.overlay.show .popup{transform:scale(1) translateY(0);opacity:1}
+.popup::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,var(--gold),var(--gold3),var(--gold));border-radius:20px 20px 0 0;z-index:2}
+
+/* LEFT PANEL — image */
+.popup-left{
+  width:38%;
+  flex-shrink:0;
+  position:relative;
+  overflow:hidden;
+  border-radius:20px 0 0 20px;
+}
+.popup-hero{width:100%;height:100%;position:relative}
+.popup-hero img{width:100%;height:100%;object-fit:cover;display:block}
+.popup-hero-overlay{
+  position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(6,14,31,0.15) 0%,rgba(6,14,31,0.65) 100%);
+}
+/* Icon + title overlay on image */
+.popup-left-label{
+  position:absolute;bottom:0;left:0;right:0;
+  padding:28px 24px;
+  background:linear-gradient(to top,rgba(6,14,31,0.95) 0%,rgba(6,14,31,0.6) 60%,transparent 100%);
+}
+.popup-icon{font-size:44px;line-height:1;display:block;margin-bottom:10px}
+.popup-num{font-size:10px;font-weight:700;letter-spacing:3px;color:var(--gold3);text-transform:uppercase;margin-bottom:6px}
+.popup-title{font-family:'Playfair Display',serif;font-size:clamp(1.2rem,2.2vw,1.7rem);font-weight:900;line-height:1.25;color:var(--white)}
+.popup-tagline{font-size:12px;color:rgba(255,255,255,0.7);margin-top:8px;line-height:1.5;font-style:italic}
+
+/* RIGHT PANEL — scrollable content */
+.popup-right{
+  flex:1;
+  overflow-y:auto;
+  padding:32px 28px 28px 32px;
+  display:flex;
+  flex-direction:column;
+  position:relative;
+}
+.popup-right::-webkit-scrollbar{width:5px}
+.popup-right::-webkit-scrollbar-thumb{background:rgba(201,162,39,.3);border-radius:3px}
+
+.popup-close{
+  position:absolute;top:18px;right:18px;
+  width:38px;height:38px;border-radius:50%;
+  border:1px solid rgba(201,162,39,0.3);
+  background:rgba(201,162,39,0.08);color:var(--gold3);
+  font-size:18px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;z-index:10;
+  transition:background .15s,transform .15s;
+}
+.popup-close:hover{background:rgba(201,162,39,0.22);transform:rotate(90deg)}
+
+.popup-intro{
+  font-size:14px;color:rgba(255,255,255,0.85);line-height:1.75;
+  margin-bottom:20px;margin-top:4px;
+  border-left:3px solid var(--gold);
+  padding:12px 16px;
+  background:rgba(201,162,39,0.06);
+  border-radius:0 10px 10px 0;
+  flex-shrink:0;
+}
+
+/* INLINE IMAGE — compact strip inside right panel */
+.popup-img-block{
+  width:100%;border-radius:10px;overflow:hidden;
+  margin-bottom:20px;border:1px solid rgba(201,162,39,0.18);
+  flex-shrink:0;
+}
+.popup-img-block img{width:100%;height:130px;object-fit:cover;display:block}
+.popup-img-block .img-cap{font-size:10px;color:var(--text-dim);padding:7px 12px;background:rgba(0,0,0,0.5);letter-spacing:.5px;text-align:center}
+
+/* POINTS — 2-column grid on wide popup */
+.points-list{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+  flex:1;
+}
+.point-item{
+  display:flex;gap:12px;align-items:flex-start;
+  background:rgba(255,255,255,0.03);
+  border:1px solid rgba(255,255,255,0.07);
+  border-radius:12px;padding:14px 16px;
+  transition:border-color .2s,background .2s;
+}
+.point-item:hover{border-color:rgba(201,162,39,0.3);background:rgba(201,162,39,0.05)}
+.point-dot{
+  width:28px;height:28px;border-radius:50%;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  font-size:12px;font-weight:700;
+  background:linear-gradient(135deg,var(--gold),var(--gold2));
+  color:var(--navy);box-shadow:0 3px 10px rgba(201,162,39,0.4);
+  margin-top:1px;
+}
+.point-text{flex:1;min-width:0}
+.point-text strong{font-size:13px;font-weight:700;display:block;margin-bottom:5px;color:var(--white)}
+.point-text span{font-size:12px;color:var(--text-muted);line-height:1.6}
+
+/* FOOTER nav */
+.popup-footer{
+  margin-top:20px;padding-top:16px;flex-shrink:0;
+  border-top:1px solid rgba(201,162,39,0.15);
+  display:flex;align-items:center;justify-content:center;gap:10px;
+}
+.popup-nav-btn{
+  background:rgba(201,162,39,0.1);border:1px solid rgba(201,162,39,0.3);
+  color:var(--gold3);font-size:12px;font-weight:600;letter-spacing:.5px;
+  padding:9px 22px;border-radius:8px;cursor:pointer;transition:background .15s;text-transform:uppercase;
+}
+.popup-nav-btn:hover{background:rgba(201,162,39,0.22)}
+.popup-step-counter{font-size:12px;color:var(--text-dim);letter-spacing:1px;padding:0 8px}
+</style>
+
+<h2 class="sr-only">Powerful Content Funnel</h2>
+
+<div class="title-block">
+  <div class="badge">✦ Trading Framework</div>
+  <h1>Powerful Content Funnel</h1>
+  <p>Click any step to explore that section in detail</p>
+</div>
+
+<div class="funnel-wrap" id="funnel"></div>
+<p class="hint"><span class="hint-dot"></span>Click any step to open details</p>
+
+<div class="overlay" id="overlay" onclick="closePopup(event)">
+  <div class="popup" id="popup">
+
+    <!-- LEFT: image panel -->
+    <div class="popup-left" id="popup-left">
+      <div class="popup-hero" id="popup-hero">
+        <img id="popup-hero-img" src="" alt="">
+        <div class="popup-hero-overlay"></div>
+      </div>
+      <div class="popup-left-label">
+        <span class="popup-icon" id="popup-icon"></span>
+        <div class="popup-num" id="popup-num"></div>
+        <div class="popup-title" id="popup-title"></div>
+        <div class="popup-tagline" id="popup-tagline"></div>
+      </div>
+    </div>
+
+    <!-- RIGHT: scrollable content -->
+    <div class="popup-right" id="popup-right">
+      <button class="popup-close" onclick="closePopupDirect()">✕</button>
+      <div class="popup-intro" id="popup-intro"></div>
+      <div id="popup-img-slot"></div>
+      <div class="points-list" id="popup-points"></div>
+      <div class="popup-footer">
+        <button class="popup-nav-btn" id="btn-prev" onclick="navigatePopup(-1)">← Prev</button>
+        <span class="popup-step-counter" id="popup-step-counter"></span>
+        <button class="popup-nav-btn" id="btn-next" onclick="navigatePopup(1)">Next →</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+// Using Unsplash source for reliable images (free, no login)
+const steps = [
+  {
+    num:1, title:"Sector Rotation", icon:"🔄",
+    bg:"linear-gradient(135deg,#3C3489 0%,#26215C 100%)",
+    borderColor:"rgba(127,119,221,0.6)", numBg:"#26215C", numTxt:"#CECBF6",
+    tagline:"Follow the money as it moves between sectors",
+    intro:"Sector rotation means money moves from one sector to another based on the economic cycle. Smart traders follow this money flow.",
+    heroImg:"https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=1200&q=80",
+    inlineImg:"https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?w=900&q=80",
+    inlineCap:"📊 Economy cycles determine which sectors lead — rotate with the smart money",
+    points:[
+      {title:"Economy has 4 phases", body:"Expansion, Peak, Contraction, Recovery — each phase favors different sectors like IT, FMCG, Banking, or Metals."},
+      {title:"Early cycle winners", body:"Financials and Consumer Discretionary sectors lead at the start of a bull market when economy begins recovering."},
+      {title:"Late cycle winners", body:"Energy, Materials, and Utilities tend to outperform when the economy peaks and before a slowdown begins."},
+      {title:"Follow the money", body:"When FIIs rotate into a sector, prices move up weeks before news breaks. Track FII data daily."},
+      {title:"Use sector ETFs", body:"Watch Nifty Bank, Nifty IT, Nifty Metal ETFs — rising ETF with strong volume confirms rotation into that sector."}
+    ]
+  },
+  {
+    num:2, title:"Sector Strength", icon:"💪",
+    bg:"linear-gradient(135deg,#534AB7 0%,#3C3489 100%)",
+    borderColor:"rgba(175,169,236,0.6)", numBg:"#3C3489", numTxt:"#CECBF6",
+    tagline:"Rank every sector and trade only the strongest",
+    intro:"Not all sectors are equal. Measuring sector strength helps you rank them and focus only on the strongest performing group.",
+    heroImg:"https://images.unsplash.com/photo-1642790551116-18e4f4f13839?w=1200&q=80",
+    inlineImg:"https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=900&q=80",
+    inlineCap:"📈 Compare sectors vs the index — breadth and volume reveal true strength",
+    points:[
+      {title:"Compare sector to index", body:"A sector is strong when it consistently beats Nifty 50. If Nifty falls 2% but IT falls only 0.5%, IT is showing strength."},
+      {title:"Breadth check", body:"Count how many stocks in the sector are above their 50-day moving average. More than 70% = strong sector breadth."},
+      {title:"52-week highs count", body:"A sector making new 52-week highs regularly is in a strong uptrend. Track this weekly for each sector."},
+      {title:"Volume matters", body:"Rising sector price with rising volume = real institutional buying. Price rise with low volume = weak, may reverse."},
+      {title:"Relative rotation graph", body:"Use RRG charts to visually see which sectors are in 'Leading' or 'Improving' quadrants — focus only on those."}
+    ]
+  },
+  {
+    num:3, title:"Strongest Sector Kaise Find Kare", icon:"🔍",
+    bg:"linear-gradient(135deg,#7F77DD 0%,#534AB7 100%)",
+    borderColor:"rgba(206,203,246,0.6)", numBg:"#534AB7", numTxt:"#EEEDFE",
+    tagline:"A step-by-step filtering process to find the top sector",
+    intro:"Finding the strongest sector is a step-by-step filtering process. You rank all sectors and pick the top 1-2 to trade.",
+    heroImg:"https://images.unsplash.com/photo-1559526324-4b87b5e36e44?w=1200&q=80",
+    inlineImg:"https://images.unsplash.com/photo-1543286386-713bdd548da4?w=900&q=80",
+    inlineCap:"🔍 5-step filter: List → 1-month return → RS line → Fund flows → Pick top 1-2",
+    points:[
+      {title:"Step 1 — List all sectors", body:"Start with a list: IT, Banking, Pharma, Auto, FMCG, Metal, Realty, Infra, Energy. Rate each one weekly."},
+      {title:"Step 2 — Check 1-month return", body:"Calculate which sector gave the highest return in the last 4 weeks. This is your momentum filter."},
+      {title:"Step 3 — Confirm with RS line", body:"Draw the sector ETF relative to Nifty 50. If the RS line is trending upward, the sector is leading. If flat or down — skip."},
+      {title:"Step 4 — Check mutual fund flows", body:"Look at AMFI data monthly — which sectoral mutual funds got highest inflows? That shows where smart money is going."},
+      {title:"Step 5 — Pick top 1-2", body:"Never trade more than 2 sectors at once. Focus gives better results than diversification at this stage."}
+    ]
+  },
+  {
+    num:4, title:"Leader Stock Kaise Find Kare", icon:"⭐",
+    bg:"linear-gradient(135deg,#0F6E56 0%,#085041 100%)",
+    borderColor:"rgba(93,202,165,0.6)", numBg:"#085041", numTxt:"#9FE1CB",
+    tagline:"Inside a strong sector, find the stock that truly leads",
+    intro:"Inside a strong sector, only a few stocks truly lead. These leader stocks give the best risk-reward trades with lowest risk.",
+    heroImg:"https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=1200&q=80",
+    inlineImg:"https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=900&q=80",
+    inlineCap:"⭐ Leaders: near 52-week highs, 25%+ earnings growth, tight base, institutional buying",
+    points:[
+      {title:"Highest RS rank in sector", body:"Use Relative Strength ranking. The top 10-15% RS ranked stocks in a sector are your candidate leaders."},
+      {title:"Price making new highs", body:"Leader stocks are at or near 52-week highs — not at support. Buying near highs feels scary but gives the best gains."},
+      {title:"Strong earnings growth", body:"Look for 25%+ quarterly earnings growth. Institutions buy companies growing earnings fast — that's what drives big moves."},
+      {title:"Increasing institutional holding", body:"Check quarterly shareholding data — if mutual funds and FIIs are increasing stake, the stock is under accumulation."},
+      {title:"Small base with tight price action", body:"Leaders consolidate in tight ranges (within 15-20%) before breakout. A tight, quiet base = institutional holding, not selling."}
+    ]
+  },
+  {
+    num:5, title:"Relative Strength", icon:"📈",
+    bg:"linear-gradient(135deg,#1D9E75 0%,#0F6E56 100%)",
+    borderColor:"rgba(159,225,203,0.6)", numBg:"#0F6E56", numTxt:"#9FE1CB",
+    tagline:"Only own stocks that are stronger than the market",
+    intro:"Relative Strength (RS) is how a stock performs compared to the overall market. RS rising = the stock is stronger than the market.",
+    heroImg:"https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=1200&q=80",
+    inlineImg:"https://images.unsplash.com/photo-1564939558297-fc396f18e5c7?w=900&q=80",
+    inlineCap:"📈 RS line = Stock ÷ Nifty. New RS highs before price highs = earliest buy signal",
+    points:[
+      {title:"What is the RS line?", body:"Draw a line = Stock Price ÷ Nifty 50. If this line goes up even when Nifty falls — the stock is a true leader."},
+      {title:"RS new high before price", body:"Best stocks show RS line making a new high before the price breaks out. This is the earliest entry signal you can get."},
+      {title:"IBD RS Rating scale", body:"Use a 1-99 scale. Only buy stocks with RS rating of 80 or above. Below 80 means too many stocks are performing better."},
+      {title:"Avoid RS laggards", body:"If a stock cannot outperform in a bull market, it will crash harder in a bear market. Skip weak RS stocks completely."},
+      {title:"Compare within sector", body:"Also compare the stock's RS vs its own sector peers. The best stock beats both the index AND its sector simultaneously."}
+    ]
+  },
+  {
+    num:6, title:"Institutional Money Flow", icon:"🏦",
+    bg:"linear-gradient(135deg,#5DCAA5 0%,#1D9E75 100%)",
+    borderColor:"rgba(29,158,117,0.8)", numBg:"#1D9E75", numTxt:"#E1F5EE",
+    tagline:"Track the big money that moves markets for months",
+    intro:"Institutions (mutual funds, FIIs, insurance) move huge amounts. When they buy, prices go up for months. You want to ride their wave.",
+    heroImg:"https://images.unsplash.com/photo-1444653614773-995cb1ef9efa?w=1200&q=80",
+    inlineImg:"https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=900&q=80",
+    inlineCap:"🏦 Volume spikes are the footprint — 3x average volume = institutions are buying",
+    points:[
+      {title:"Volume is the footprint", body:"Institutions can't hide large buys. A stock rising 2-3% on 3x average volume = big money buying. Mark these days."},
+      {title:"Accumulation days", body:"Count days where stock closes in upper half of daily range on above-average volume. 3+ such days in 2 weeks = strong accumulation."},
+      {title:"FII/DII data daily", body:"NSE publishes FII and DII buy/sell data daily. When both are buying, market goes up. When FII sells, caution."},
+      {title:"Block and bulk deals", body:"Check NSE block deal data. If large institutions are buying in bulk, it confirms the smart money thesis. Follow their trades."},
+      {title:"Mutual fund factsheet", body:"Monthly MF factsheets show top buys and new additions. Stocks being added by multiple AMCs simultaneously are high-conviction buys."}
+    ]
+  },
+  {
+    num:7, title:"Smart Money Framework", icon:"🧠",
+    bg:"linear-gradient(135deg,#BA7517 0%,#854F0B 100%)",
+    borderColor:"rgba(239,159,39,0.6)", numBg:"#854F0B", numTxt:"#FAC775",
+    tagline:"A complete decision-making system combining all signals",
+    intro:"Smart Money Framework combines all signals — price, volume, sector, RS, institutions — into one clear decision-making system.",
+    heroImg:"https://images.unsplash.com/photo-1504868584819-f8e8b4b6d7e3?w=1200&q=80",
+    inlineImg:"https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=900&q=80",
+    inlineCap:"🧠 5-filter checklist: Uptrend → Sector → RS 80+ → Accumulation → Base pattern",
+    points:[
+      {title:"The 5-filter checklist", body:"Before any trade, check: (1) Market uptrend? (2) Sector leading? (3) RS rank 80+? (4) Institutional accumulation? (5) Base pattern forming? All 5 = green light."},
+      {title:"Market first, stock second", body:"Never fight the broader market. 75% of stocks follow the market direction. In a downtrend, even great stocks can fall."},
+      {title:"Follow price, not news", body:"Price action never lies. News is late. If price is breaking out on volume, something good is happening — buy first, understand later."},
+      {title:"Wyckoff accumulation", body:"Smart money buys quietly in a sideways range (cause), then triggers a breakout (effect). A long tight base = strong cause being built."},
+      {title:"Avoid distribution zones", body:"When price rises but volume falls, or there are multiple reversals near highs — institutions are selling to retail. Stay away."}
+    ]
+  },
+  {
+    num:8, title:"Entry Timing", icon:"⏱️",
+    bg:"linear-gradient(135deg,#EF9F27 0%,#BA7517 100%)",
+    borderColor:"rgba(239,159,39,0.8)", numBg:"#BA7517", numTxt:"#FAEEDA",
+    tagline:"The right entry price separates profit from loss",
+    intro:"Timing your entry correctly reduces risk dramatically. A perfect stock bought at the wrong time can still lose money. Enter at the pivot.",
+    heroImg:"https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=1200&q=80",
+    inlineImg:"https://images.unsplash.com/photo-1642790551116-18e4f4f13839?w=900&q=80",
+    inlineCap:"⏱️ Buy at breakout pivot on 40-50% above-average volume — never chase extended stocks",
+    points:[
+      {title:"Buy at the breakout pivot", body:"The pivot point is just above a base high. Example: stock consolidates at ₹500 for weeks, then breaks ₹505 on big volume — that's your entry."},
+      {title:"Volume must confirm", body:"Breakout volume should be at least 40-50% above average daily volume. Low volume breakout = likely to fail and pull back."},
+      {title:"Cup with Handle pattern", body:"Stock forms a U-shape (cup), then a small pullback (handle), then breaks out. Handle should be tight and low-volume. Buy the breakout."},
+      {title:"VCP — Volatility Contraction", body:"Each pullback in the base gets smaller: 25% → 15% → 8% → 4%. Tightening volatility = coiling spring ready to break out explosively."},
+      {title:"Never chase extended stocks", body:"If a stock is more than 5% above its pivot/buy point, do NOT buy. Wait for the next base. Chasing extended stocks = buying at top."}
+    ]
+  },
+  {
+    num:9, title:"Risk Management", icon:"🛡️",
+    bg:"linear-gradient(135deg,#993C1D 0%,#4A1B0C 100%)",
+    borderColor:"rgba(216,90,48,0.6)", numBg:"#4A1B0C", numTxt:"#F5C4B3",
+    tagline:"Protect your capital — profits come to those who survive",
+    intro:"Risk management is what separates professionals from gamblers. Protect your capital first. Profits come to those who survive.",
+    heroImg:"https://images.unsplash.com/photo-1579621970563-ebec7560ff3e?w=1200&q=80",
+    inlineImg:"https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=900&q=80",
+    inlineCap:"🛡️ Risk 1-2% per trade maximum — position sizing formula protects your capital",
+    points:[
+      {title:"Stop loss before entry", body:"Before placing any trade, decide your stop loss. If you buy a breakout at ₹505, place stop at ₹480 (below base low). No stop = no trade."},
+      {title:"Risk only 1-2% per trade", body:"If your total capital is ₹1 lakh, risk max ₹1000-2000 per trade. This way even 5-6 losses in a row won't destroy your account."},
+      {title:"Position sizing formula", body:"Shares to buy = (Capital × Risk%) ÷ (Entry Price − Stop Price). This ensures every trade risks the same fixed rupee amount."},
+      {title:"Cut losses fast, let winners run", body:"Exit immediately when stop is hit — no hope, no averaging down. But let winning trades run until a sell signal appears. Asymmetry is the edge."},
+      {title:"Portfolio-level rules", body:"If overall portfolio falls 7-8% from peak, stop trading new positions. Market may be turning. Cash is a position — protect it."}
+    ]
+  },
+  {
+    num:10, title:"Full Trade Example", icon:"🎯",
+    bg:"linear-gradient(135deg,#D85A30 0%,#993C1D 100%)",
+    borderColor:"rgba(240,153,123,0.6)", numBg:"#993C1D", numTxt:"#F5C4B3",
+    tagline:"All 9 steps working together in one complete trade",
+    intro:"Let's walk through a complete trade from start to finish — sector selection all the way to exit. This is how all 9 steps work together.",
+    heroImg:"https://images.unsplash.com/photo-1559526323-cb2f2fe2591b?w=1200&q=80",
+    inlineImg:"https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?w=900&q=80",
+    inlineCap:"🎯 TCS trade: IT sector → RS 88 → Pivot ₹3850 → Stop ₹3650 → Exit +22%",
+    points:[
+      {title:"Step 1 — Market is in uptrend", body:"Nifty 50 is above 50-day MA, making higher highs. FII data shows net buying for 3 weeks. Market condition: Green. Proceed."},
+      {title:"Step 2 — Sector: Nifty IT leading", body:"Nifty IT ETF up 8% in 4 weeks vs Nifty up 3%. RS line of IT vs Nifty trending up. IT sector selected as leading sector."},
+      {title:"Step 3 — Leader: TCS identified", body:"TCS has RS rank 88, MF holdings increased last quarter, stock in tight 12% base near 52-week highs. All leader filters pass."},
+      {title:"Step 4 — Entry at pivot ₹3850", body:"TCS breaks above ₹3850 (base high) on 2x average volume. Entry triggered. Stop set at ₹3650 (below base low = 5.2% risk)."},
+      {title:"Step 5 — Exit at +20% or stop hit", body:"TCS rises to ₹4620 over 8 weeks (+20%). RS line still rising. Sold half at +20%, trail stop on rest. Full exit at ₹4700. Final gain: 22%."}
+    ]
+  }
+];
+
+const funnel = document.getElementById('funnel');
+let activeStep = null;
+
+steps.forEach((s, i) => {
+  const maxW = 700, minW = 280;
+  const ratio = 1 - (i / (steps.length - 1)) * 0.44;
+  const containerW = Math.min(document.body.offsetWidth - 40, 700);
+  const w = Math.round(minW + (maxW - minW) * ratio * (containerW / maxW));
+
+  if (i > 0) {
+    const conn = document.createElement('div');
+    conn.className = 'connector';
+    funnel.appendChild(conn);
+  }
+
+  const step = document.createElement('div');
+  step.className = 'funnel-step';
+  step.id = 'step-' + i;
+  step.style.cssText = `width:${w}px;height:66px;background:${s.bg};border-radius:12px;border:1px solid ${s.borderColor};clip-path:polygon(0 0,100% 0,calc(100% - 18px) 100%,18px 100%);`;
+  step.innerHTML = `<div class="funnel-inner">
+    <div class="step-num" style="background:${s.numBg};color:${s.numTxt}">${s.num}</div>
+    <div class="step-title" style="color:#fff;max-width:${w-130}px">${s.title}</div>
+    <div class="step-icon">${s.icon}</div>
+  </div>`;
+  step.onclick = () => openPopup(i);
+  funnel.appendChild(step);
+});
+
+function openPopup(i) {
+  const s = steps[i];
+  if (activeStep !== null) document.getElementById('step-' + activeStep)?.classList.remove('active');
+  activeStep = i;
+  document.getElementById('step-' + i).classList.add('active');
+
+  // Left panel: hero image + gradient
+  const heroImg = document.getElementById('popup-hero-img');
+  heroImg.src = s.heroImg || '';
+  heroImg.alt = s.title;
+
+  // Tint left panel with step color
+  document.getElementById('popup-left').style.background = s.bg;
+
+  document.getElementById('popup-icon').textContent = s.icon;
+  document.getElementById('popup-num').textContent = `STEP ${s.num} OF ${steps.length}`;
+  document.getElementById('popup-title').textContent = s.title;
+  document.getElementById('popup-tagline').textContent = s.tagline || '';
+  document.getElementById('popup-intro').textContent = s.intro;
+  document.getElementById('popup-step-counter').textContent = `${s.num} / ${steps.length}`;
+
+  // Inline image strip
+  const slot = document.getElementById('popup-img-slot');
+  slot.innerHTML = s.inlineImg ? `<div class="popup-img-block"><img src="${s.inlineImg}" alt="${s.title}" onerror="this.parentElement.style.display='none'"><div class="img-cap">${s.inlineCap||''}</div></div>` : '';
+
+  const list = document.getElementById('popup-points');
+  list.innerHTML = '';
+  s.points.forEach((p, pi) => {
+    const item = document.createElement('div');
+    item.className = 'point-item';
+    item.innerHTML = `<div class="point-dot">${pi+1}</div><div class="point-text"><strong>${p.title}</strong><span>${p.body}</span></div>`;
+    list.appendChild(item);
+  });
+
+  document.getElementById('btn-prev').disabled = i === 0;
+  document.getElementById('btn-prev').style.opacity = i === 0 ? '0.4' : '1';
+  document.getElementById('btn-next').disabled = i === steps.length - 1;
+  document.getElementById('btn-next').style.opacity = i === steps.length - 1 ? '0.4' : '1';
+
+  // Scroll right panel back to top
+  document.getElementById('popup-right').scrollTop = 0;
+
+  document.getElementById('overlay').classList.add('show');
+  document.body.style.overflow = 'hidden';
+}
+
+function navigatePopup(dir) {
+  if (activeStep === null) return;
+  const next = activeStep + dir;
+  if (next >= 0 && next < steps.length) openPopup(next);
+}
+
+function closePopup(e) {
+  if (e.target === document.getElementById('overlay')) closePopupDirect();
+}
+function closePopupDirect() {
+  document.getElementById('overlay').classList.remove('show');
+  document.body.style.overflow = '';
+  if (activeStep !== null) { document.getElementById('step-' + activeStep)?.classList.remove('active'); activeStep = null; }
+}
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closePopupDirect();
+  if (e.key === 'ArrowRight' || e.key === 'ArrowDown') navigatePopup(1);
+  if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') navigatePopup(-1);
+});
+</script>
